@@ -1,0 +1,371 @@
+# Controlled vocabulary for primary topic assignment.
+#
+# Each topic carries:
+#   label:        short identifier used as the categorical value in sources.csv
+#   display:      human-readable label used in legends and the README
+#   description:  the substantive meaning of the topic; this is the rule a
+#                 human applies when reviewing borderline cases
+#   keywords:     lemma-friendly terms used by the TF-IDF scorer in
+#                 src/topic_assignment.py to produce a topic-affinity score
+#                 per source. These DO NOT determine the final label on their
+#                 own — they surface candidate topics, and assignment is
+#                 confirmed by a human reviewer (see docs/topic_assignment_guide.md).
+#
+# Adding or removing a topic is a deliberate methodological act. Document any
+# change in docs/methodology.md alongside the rationale.
+
+topics:
+  - label: mechanism
+    display: "Technical mechanism development"
+    description: >
+      Original contributions that define, prove, or extend a privacy
+      mechanism (e.g. introducing a new DP variant, MPC protocol, FHE
+      scheme, ZKP system, or TEE primitive). The central contribution
+      is the mechanism itself.
+    keywords:
+      - protocol
+      - scheme
+      - construction
+      - primitive
+      - theorem
+      - proof
+      - lemma
+      - mechanism
+      - composition
+      - sensitivity
+      - garbled circuit
+      - secret sharing
+      - lattice
+      - bootstrapping
+      - homomorphic
+      - zero knowledge
+      - secure multi-party
+      - differential privacy
+      - noise calibration
+
+  - label: systems
+    display: "System and framework implementation"
+    description: >
+      Engineering contributions: compilers, libraries, SDKs, end-to-end
+      systems, hardware acceleration, or architecture papers whose
+      central claim is that a mechanism has been realised in software
+      or hardware.
+    keywords:
+      - library
+      - framework
+      - compiler
+      - implementation
+      - SDK
+      - toolkit
+      - system
+      - architecture
+      - prototype
+      - GPU
+      - FPGA
+      - accelerator
+      - SEAL
+      - HElib
+      - OpenFHE
+      - CrypTen
+      - FLARE
+      - clara
+      - OpenDP
+      - HEIR
+
+  - label: evaluation
+    display: "Performance and scalability evaluation"
+    description: >
+      Empirical benchmarks and comparative studies whose central claim
+      concerns runtime, throughput, communication cost, accuracy
+      trade-offs, or scalability.
+    keywords:
+      - benchmark
+      - evaluation
+      - performance
+      - overhead
+      - throughput
+      - latency
+      - scalability
+      - comparative
+      - empirical
+      - measurement
+      - cost analysis
+      - trade-off
+
+  - label: assurance
+    display: "Verification, assurance, and evidence"
+    description: >
+      Threat models, attack studies, side-channel analyses, audit
+      methodologies, privacy registries, and any work whose central
+      claim concerns how to gain evidence about whether a deployed
+      PET behaves as advertised.
+    keywords:
+      - attack
+      - adversary
+      - threat model
+      - side channel
+      - membership inference
+      - reconstruction
+      - reidentification
+      - audit
+      - assurance
+      - verification
+      - testing
+      - registry
+      - disclosure
+      - leakage
+      - vulnerability
+      - byzantine
+      - poisoning
+
+  - label: governance
+    display: "Governance, regulation, and standards"
+    description: >
+      Regulatory guidance, policy commentary, standards, and normative
+      frameworks. Central contribution is a rule, framework, or policy
+      position rather than a mechanism or measurement.
+    keywords:
+      - regulation
+      - guidance
+      - policy
+      - standard
+      - framework
+      - GDPR
+      - DMA
+      - compliance
+      - governance
+      - rights
+      - ethics
+      - five safes
+      - ISO
+      - directive
+
+  - label: deployment
+    display: "Sectoral application and deployment"
+    description: >
+      Reports of a PET being applied in a specific sector (health,
+      finance, census, mobility, advertising). The central claim
+      concerns the deployment context, not the mechanism.
+    keywords:
+      - deployment
+      - case study
+      - healthcare
+      - hospital
+      - clinical
+      - bank
+      - finance
+      - census
+      - electoral
+      - advertising
+      - public sector
+      - production
+      - pilot
+      - real world
+      - use case
+
+  - label: survey
+    display: "Survey and systematisation"
+    description: >
+      Surveys, systematisations of knowledge (SoK), scoping reviews,
+      and Foundations & Trends monographs whose explicit purpose is to
+      synthesise an area rather than contribute a new mechanism.
+    keywords:
+      - survey
+      - review
+      - systematic
+      - systematisation
+      - SoK
+      - overview
+      - landscape
+      - taxonomy
+      - state of the art
+      - foundations and trends
+
+# Secondary, multi-label tag set capturing which PET family (or families) a
+# source primarily concerns. A source MAY carry zero, one, or several family
+# tags; the assignment is independent of the primary topic above.
+pet_families:
+  - label: differential_privacy
+    display: "Differential privacy"
+    keywords:
+      - differential privacy
+      - epsilon
+      - rényi
+      - renyi
+      - laplace mechanism
+      - gaussian mechanism
+      - DP-SGD
+      - PATE
+      - local differential privacy
+
+  - label: mpc
+    display: "Secure multi-party computation"
+    keywords:
+      - multi-party computation
+      - MPC
+      - SMPC
+      - secret sharing
+      - garbled circuit
+      - oblivious transfer
+      - Yao
+      - ABY
+      - SPDZ
+
+  - label: fhe
+    display: "Homomorphic encryption"
+    keywords:
+      - homomorphic encryption
+      - FHE
+      - BFV
+      - BGV
+      - CKKS
+      - TFHE
+      - bootstrapping
+      - HElib
+      - SEAL
+      - OpenFHE
+
+  - label: federated_learning
+    display: "Federated learning"
+    keywords:
+      - federated
+      - FedAvg
+      - cross-silo
+      - cross-device
+      - aggregation
+      - FLARE
+      - Clara
+
+  - label: tee
+    display: "Trusted execution environments"
+    keywords:
+      - trusted execution
+      - TEE
+      - SGX
+      - TDX
+      - SEV
+      - enclave
+      - Nitro
+      - confidential computing
+      - attestation
+
+  - label: zkp
+    display: "Zero-knowledge proofs"
+    keywords:
+      - zero knowledge
+      - zk-SNARK
+      - zk-STARK
+      - SNARK
+      - STARK
+      - bulletproof
+      - Halo2
+      - PLONK
+      - Groth16
+      - verifiable computation
+
+  - label: synthetic_data
+    display: "Synthetic data"
+    keywords:
+      - synthetic data
+      - generative
+      - GAN
+      - VAE
+      - synthesised
+      - synthesized
+      - simulator
+
+  - label: syntactic_anonymisation
+    display: "Syntactic anonymisation"
+    keywords:
+      - k-anonymity
+      - l-diversity
+      - t-closeness
+      - pseudonym
+      - anonymisation
+      - anonymization
+      - de-identification
+      - suppression
+      - generalisation
+
+# Heuristic patterns used by src/parse_references.py to seed the
+# publication-type column. The seeded value is always reviewed manually.
+# (Order matters: the first match wins.)
+publication_type_patterns:
+  - label: standards_specification
+    display: "Standards / specification"
+    patterns:
+      - "ISO/IEC"
+      - "W3C Recommendation"
+      - "Regulation (EU)"
+      - "EUR-Lex"
+  - label: regulatory_guidance
+    display: "Regulatory / policy guidance"
+    patterns:
+      - "Special Publication"
+      - "NIST IR"
+      - "Guidelines"
+      - "Guidance"
+      - "Information Commissioner"
+      - "ICO"
+      - "Federal Trade Commission"
+      - "FTC"
+      - "OECD"
+      - "European Data Protection Board"
+      - "European Commission"
+      - "GOV.UK"
+      - "Office for National Statistics"
+      - "Census Bureau"
+  - label: survey_review
+    display: "Survey / systematisation"
+    patterns:
+      - "Foundations and Trends"
+      - "scoping review"
+      - "systematic review"
+      - "A survey"
+      - "A review"
+      - "SoK"
+      - "systematisation"
+  - label: technical_whitepaper
+    display: "Technical white paper"
+    patterns:
+      - "White paper"
+      - "white paper"
+      - "Whitepaper"
+      - "Solution brief"
+      - "Technical report"
+      - "Technical whitepaper"
+  - label: software_repository
+    display: "Software repository"
+    patterns:
+      - "[Software]"
+      - "GitHub repository"
+      - "github.com"
+  - label: industry_blog
+    display: "Industry / practitioner blog"
+    patterns:
+      - "Blog"
+      - "blog"
+      - "Developers Blog"
+      - "Online Security Blog"
+      - "Research Blog"
+      - "IEEE Spectrum"
+  - label: preprint
+    display: "Preprint"
+    patterns:
+      - "arXiv preprint"
+      - "ePrint Archive"
+      - "EasyChair Preprint"
+  - label: academic_paper
+    display: "Academic paper"
+    patterns:
+      - "Proceedings of"
+      - "Journal of"
+      - "Transactions on"
+      - "Lecture Notes"
+      - "Communications of the ACM"
+      - "Nature"
+      - "Science"
+      - "Scientific Reports"
+      - "Cryptography"
+      - "Symposium"
+      - "Conference"
