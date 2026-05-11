@@ -27,3 +27,6 @@ plotly>=5.18
 # Notebook runtime
 jupyterlab>=4.0
 ipykernel>=6.28
+
+# Test runner
+pytest>=8.0

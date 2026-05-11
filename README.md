@@ -7,7 +7,11 @@ around the themes of the paper**. It is an analytical artefact, not decoration:
 any visible imbalance is reported as a finding about the evidence base rather
 than corrected away.
 
-## What the figure shows
+## What the figures show
+
+The pipeline produces one main figure and three supporting figures.
+
+**Main figure — semantic map** (`figures/semantic_map_main.png`)
 
 - **Nodes**  — each cited source.
 - **Node colour** — primary topic (controlled vocabulary, see [data/topic_vocabulary.yaml](data/topic_vocabulary.yaml)).
@@ -17,6 +21,17 @@ than corrected away.
   - shared primary topic;
   - shared PET family (homomorphic encryption, MPC, DP, FL, TEE, ZKP, synthetic data, syntactic anonymisation);
   - high TF-IDF cosine similarity, k-nearest-neighbour capped.
+
+**Supporting figures**
+
+- `figures/timeline.png` — sources by year and primary topic.
+- `figures/type_topic_heatmap.png` — source type × primary topic crosstab with explicit axis labels.
+- `figures/pet_family_breakdown.png` — counts across the seven PET families the
+  survey explicitly considers (secure MPC, homomorphic encryption, differential
+  privacy, synthetic data, zero-knowledge, federated learning and distributed
+  analytics, trusted execution environments), stacked by primary topic. Sources
+  that carry no tag from the seven are reported as a separate "Other / none"
+  bar so they are visible rather than hidden.
 
 ## Repository layout
 
@@ -128,3 +143,20 @@ choice, and its consequences, are discussed in [docs/methodology.md](docs/method
 If the figure surfaces a bias (e.g. an over-representation of governance and
 DP-focused sources), this is treated as a finding to be commented on later in
 the paper, not a flaw to be hidden.
+
+## Tests
+
+A pytest suite under [tests/](tests/) covers the deterministic parts of the
+pipeline:
+
+```bash
+.venv/bin/python -m pytest tests/
+```
+
+The suite exercises the reference parser against representative entries from
+the live bibliography (typographic quotes, arXiv preprints, year-with-suffix
+patterns, ISO standards, software repositories), the topic-assignment scoring
+on hand-crafted texts whose topical home is unambiguous, all three graph edge
+rules in isolation, and the four rendering primitives as smoke tests. Network-
+dependent stages (CrossRef / arXiv) and sentence-transformer embeddings are
+integration concerns and are not covered here.
