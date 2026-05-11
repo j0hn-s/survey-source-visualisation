@@ -1,0 +1,29 @@
+# Core analysis stack
+pandas>=2.1
+numpy>=1.26
+scikit-learn>=1.4
+pyyaml>=6.0
+
+# Text processing
+nltk>=3.8
+beautifulsoup4>=4.12
+pdfplumber>=0.10
+
+# Optional: semantic embeddings (heavy dependency, see methodology.md §4.2)
+sentence-transformers>=2.5
+
+# Network construction
+networkx>=3.2
+
+# HTTP for abstract acquisition
+requests>=2.31
+
+# Visualisation
+matplotlib>=3.8
+seaborn>=0.13
+pyvis>=0.3.2
+plotly>=5.18
+
+# Notebook runtime
+jupyterlab>=4.0
+ipykernel>=6.28
