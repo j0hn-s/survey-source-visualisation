@@ -1,0 +1,69 @@
+{
+  "n_sources": 284,
+  "n_nodes": 284,
+  "n_edges_total": 4126,
+  "edges_by_type": {
+    "family": 2692,
+    "semantic": 1434
+  },
+  "text_coverage": {
+    "n_acquired": 249,
+    "n_fallback": 35,
+    "pct_acquired": 87.7
+  },
+  "n_clusters": 7,
+  "modularity": 0.6222,
+  "cluster_sizes": {
+    "C1": 58,
+    "C2": 53,
+    "C3": 45,
+    "C4": 44,
+    "C5": 28,
+    "C6": 26,
+    "C7": 24
+  },
+  "n_other": 6,
+  "cluster_labels": {
+    "C1": "clients, fl, llms",
+    "C2": "zk, zero knowledge, protocols",
+    "C3": "pets, privacy enhancing technologies, dp",
+    "C4": "encryption, fhe, cloud",
+    "C5": "synthetic data, ieee, epfl",
+    "C6": "anonymity, record linkage, nist",
+    "C7": "cookies, ons, safes"
+  },
+  "type_distribution": {
+    "academic_paper": 137,
+    "preprint": 43,
+    "regulatory_guidance": 28,
+    "online_resource": 21,
+    "technical_whitepaper": 19,
+    "industry_blog": 15,
+    "survey_review": 13,
+    "standards_specification": 4,
+    "software_repository": 4
+  },
+  "year_min": 1986,
+  "year_max": 2026,
+  "n_year_missing": 17,
+  "tfidf_features": 3990,
+  "params": {
+    "tfidf_min_df": 2,
+    "tfidf_max_df": 0.9,
+    "tfidf_ngram": [
+      1,
+      2
+    ],
+    "cluster_k": 12,
+    "cluster_threshold": 0.1,
+    "cluster_resolution": 0.6,
+    "cluster_min_size": 4,
+    "seed": 42
+  },
+  "figures": [
+    "pet_family_breakdown.png",
+    "semantic_map_main.png",
+    "timeline.png",
+    "type_topic_heatmap.png"
+  ]
+}

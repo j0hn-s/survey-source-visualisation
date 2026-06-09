@@ -1,0 +1,285 @@
+id,number,cluster,cluster_label,title
+ref-7cac0cfb,1,C1,"clients, fl, llms",Deep learning with differential privacy
+ref-9861f587,2,C5,"synthetic data, ieee, epfl",How protective are synthetic data?
+ref-e5b698e9,3,C7,"cookies, ons, safes",New process at the ONS aims to speed up output clearance
+ref-48fec654,4,C2,"zk, zero knowledge, protocols",Communication-efficient secure logistic regression
+ref-b8270081,5,C4,"encryption, fhe, cloud",General functional bootstrapping using CKKS
+ref-f015859d,6,C6,"anonymity, record linkage, nist",Privacy-preserving data sharing across financial institutions
+ref-8a85c4e3,7,C4,"encryption, fhe, cloud",HEIR: a universal compiler for homomorphic encryption
+ref-4d3ff31d,8,C4,"encryption, fhe, cloud",
+ref-1bc460eb,9,C2,"zk, zero knowledge, protocols",Collaborative AI model training with Rhino Federated Computing on AWS
+ref-5b49303e,10,C3,"pets, privacy enhancing technologies, dp",State-of-the-art and development of privacy-enhancing technologies
+ref-3b5fb542,11,C3,"pets, privacy enhancing technologies, dp",Geo-indistinguishability: differential privacy for location-based systems
+ref-c38dce0d,12,C4,"encryption, fhe, cloud",Private Cloud Compute: a new frontier for AI privacy in the cloud
+ref-eeb53da8,13,C2,"zk, zero knowledge, protocols",From keys to databases - real-world applications of secure multi-party computation
+ref-7aa32465,14,C4,"encryption, fhe, cloud",SCONE: secure Linux containers with Intel SGX
+ref-ba20c1ba,15,C5,"synthetic data, ieee, epfl",
+ref-fa01a975,16,C2,"zk, zero knowledge, protocols",Bringing data minimization to digital wallets at scale with general-purpose zero-knowledge proofs
+ref-48635619,17,C4,"encryption, fhe, cloud","Towards the AlexNet moment for homomorphic encryption: HCNN, the first homomorphic CNN on encrypted data with GPUs"
+ref-47746551,18,C3,"pets, privacy enhancing technologies, dp",Differential privacy has disparate impact on model accuracy
+ref-a237caa1,19,C1,"clients, fl, llms",Secure stateful aggregation: a practical protocol with applications in differentially-private federated learning
+ref-be892c89,20,other,,Fool
+ref-d124970b,21,C6,"anonymity, record linkage, nist",
+ref-be06862c,22,C3,"pets, privacy enhancing technologies, dp",Program logic for differential privacy: a survey
+ref-bd0a88ac,23,C5,"synthetic data, ieee, epfl",FedSyn: synthetic data generation using federated learning
+ref-9ba51dec,24,C5,"synthetic data, ieee, epfl",Privacy and synthetic datasets
+ref-da52afa2,25,C4,"encryption, fhe, cloud",
+ref-8f7ae4c7,26,C5,"synthetic data, ieee, epfl",Machine learning with adversaries: Byzantine-tolerant gradient descent
+ref-2e94c168,27,C2,"zk, zero knowledge, protocols",Secure multiparty computation goes live
+ref-191956c4,28,C1,"clients, fl, llms",Practical secure aggregation for privacy-preserving machine learning
+ref-17bd4703,29,C1,"clients, fl, llms",Federated learning of predictive models from federated electronic health records
+ref-e4c2c4be,30,C2,"zk, zero knowledge, protocols",Composing privacy-preserving protocols: a systematic review
+ref-47d86e16,31,C1,"clients, fl, llms",The secret sharer: evaluating and testing unintended memorization in neural networks
+ref-4c472b2f,32,C1,"clients, fl, llms",Extracting memorised information from neural networks
+ref-09919479,33,C2,"zk, zero knowledge, protocols",SoK: what don
+ref-68865c3d,34,C1,"clients, fl, llms",Fine-tuning large language models with user-level differential privacy
+ref-53e3d330,35,C2,"zk, zero knowledge, protocols",ZKML: an optimizing system for ML inference in zero-knowledge proofs
+ref-ce16d72a,36,C1,"clients, fl, llms",Advances in robust federated learning: a survey with heterogeneity considerations
+ref-1aa98274,37,C2,"zk, zero knowledge, protocols",A review of zkSNARKs
+ref-c4bbe22a,38,C4,"encryption, fhe, cloud",Homomorphic encryption for arithmetic of approximate numbers
+ref-9584e92f,39,C4,"encryption, fhe, cloud",Introduction to homomorphic encryption and schemes
+ref-4ded63a2,40,C2,"zk, zero knowledge, protocols",Eos: efficient private delegation of zkSNARK provers
+ref-059496b7,41,C4,"encryption, fhe, cloud",TFHE: fast fully homomorphic encryption over the torus
+ref-f36df8ad,42,C1,"clients, fl, llms",Programmable bootstrapping enables efficient homomorphic inference of deep neural networks
+ref-d826cfa9,43,C1,"clients, fl, llms",Confidential LLM inference: performance and cost across CPU and GPU TEEs
+ref-6213a883,44,C6,"anonymity, record linkage, nist",On syntactic anonymity and differential privacy
+ref-ab715d81,45,C3,"pets, privacy enhancing technologies, dp",s
+ref-bdf51c16,46,C4,"encryption, fhe, cloud",
+ref-ce445534,47,C3,"pets, privacy enhancing technologies, dp",A shortage of privacy engineers
+ref-d8d19871,48,C4,"encryption, fhe, cloud",EVA: an encrypted vector arithmetic language and compiler for efficient homomorphic computation
+ref-a45a2014,49,C2,"zk, zero knowledge, protocols",Practical privacy-preserving machine learning via secure computation
+ref-7d151531,50,C7,"cookies, ons, safes",Five Safes: designing data access for research
+ref-043fec3a,51,C3,"pets, privacy enhancing technologies, dp",Auditing privacy-preserving analysis systems: practitioner pitfalls and transparency
+ref-8b5fc9ab,52,C2,"zk, zero knowledge, protocols",EU opens Google Search data under DMA rules
+ref-09582b87,53,other,,
+ref-c6b39adb,54,C3,"pets, privacy enhancing technologies, dp",Gaussian differential privacy
+ref-fd010a5e,55,C7,"cookies, ons, safes",New is always better?
+ref-d7f19b3c,56,C5,"synthetic data, ieee, epfl",
+ref-8e985722,57,C1,"clients, fl, llms",Flocks of stochastic parrots: differentially private prompt learning for large language models
+ref-f5c0af0d,58,C3,"pets, privacy enhancing technologies, dp",Differential privacy in practice: expose your epsilons!
+ref-041ae1ff,59,C6,"anonymity, record linkage, nist",Calibrating noise to sensitivity in private data analysis
+ref-dcabdb81,60,C3,"pets, privacy enhancing technologies, dp",
+ref-91877f54,61,C2,"zk, zero knowledge, protocols","Evaluating the efficiency of zkSNARK, zkSTARK, and Bulletproof in real-world scenarios: a benchmark study"
+ref-c738d0de,62,C3,"pets, privacy enhancing technologies, dp",RAPPOR: randomised aggregatable privacy-preserving ordinal response
+ref-9a0bca10,63,C2,"zk, zero knowledge, protocols",zk-Bench: a toolset for comparative evaluation and performance benchmarking of SNARKs
+ref-b7f652d4,64,C2,"zk, zero knowledge, protocols",Commission proposes measures for Google sharing search engine data under the DMA
+ref-395c1172,65,C3,"pets, privacy enhancing technologies, dp",
+ref-75a4dceb,66,C2,"zk, zero knowledge, protocols",
+ref-336d2ff4,67,C2,"zk, zero knowledge, protocols",A pragmatic introduction to secure multi-party computation
+ref-4ce0b560,68,C1,"clients, fl, llms",Local model poisoning attacks to Byzantine-robust federated learning
+ref-dcd147cd,69,C3,"pets, privacy enhancing technologies, dp",Keeping your privacy enhancing technology (PET) promises
+ref-afc03087,70,C7,"cookies, ons, safes",
+ref-22fe84c5,71,C7,"cookies, ons, safes",
+ref-aa01e418,72,C1,"clients, fl, llms",Differentially private next-token prediction of large language models
+ref-f3977460,73,C1,"clients, fl, llms",Truly privacy-preserving federated analytics for precision medicine with multiparty homomorphic encryption
+ref-b242461d,74,C3,"pets, privacy enhancing technologies, dp",
+ref-4662b558,75,C6,"anonymity, record linkage, nist",Understanding database reconstruction attacks on public data
+ref-e0b24f9f,76,C1,"clients, fl, llms",Inverting gradients - how easy is it to break privacy in federated learning?
+ref-8c93b8c7,77,C4,"encryption, fhe, cloud",Fully homomorphic encryption using ideal lattices
+ref-ad359e15,78,C3,"pets, privacy enhancing technologies, dp",
+ref-9e3c8f43,79,C4,"encryption, fhe, cloud",Trusted execution environments: applications and organizational challenges
+ref-7f0db960,80,C3,"pets, privacy enhancing technologies, dp",On the differential privacy and interactivity of Privacy Sandbox reports
+ref-41568c27,81,C1,"clients, fl, llms",zPROBE: zero peek robustness checks for federated learning
+ref-b0461991,82,C1,"clients, fl, llms",CryptoNets: applying neural networks to encrypted data with high throughput and accuracy
+ref-7b064f7b,83,C6,"anonymity, record linkage, nist",Modern privacy-preserving record linkage techniques: an overview
+ref-5799a6c8,84,C7,"cookies, ons, safes",
+ref-62a3eea5,85,C2,"zk, zero knowledge, protocols",How to play any mental game
+ref-e355593d,86,C2,"zk, zero knowledge, protocols",Generative adversarial networks
+ref-c73c7e9b,87,C3,"pets, privacy enhancing technologies, dp",
+ref-390b6176,88,C3,"pets, privacy enhancing technologies, dp",Sharing our latest differential privacy milestones and advancements
+ref-87fb8dc7,89,C4,"encryption, fhe, cloud",
+ref-4527701c,90,C3,"pets, privacy enhancing technologies, dp",Using privacy-enhancing technologies to enable international data sharing
+ref-42c5757e,91,C7,"cookies, ons, safes",
+ref-47ebd8ed,92,C6,"anonymity, record linkage, nist",Identifying personal genomes by surname inference
+ref-a04841e1,93,C4,"encryption, fhe, cloud",Faster homomorphic linear transformations in HElib
+ref-93406e22,94,C4,"encryption, fhe, cloud",Design and implementation of HElib: a homomorphic encryption library
+ref-49977bd5,95,C3,"pets, privacy enhancing technologies, dp","Precision-based attacks and interval refining: how to break, then fix, differential privacy on finite computers"
+ref-f577b2a7,96,C3,"pets, privacy enhancing technologies, dp",Towards measuring maturity of privacy-enhancing technologies
+ref-69a11c1f,97,C1,"clients, fl, llms",Federated learning for mobile keyboard prediction
+ref-11eb1cd4,98,C1,"clients, fl, llms",Private federated learning on vertically partitioned data via entity resolution and additively homomorphic encryption
+ref-ef7c2f77,99,C2,"zk, zero knowledge, protocols",High-throughput secure multiparty computation with an honest majority in various network settings
+ref-b94bbe6c,100,C2,"zk, zero knowledge, protocols",LOGAN: membership inference attacks against generative models
+ref-bb6ab8d2,101,C2,"zk, zero knowledge, protocols",Automated analysis of Halo2 circuits
+ref-96c73a69,102,C1,"clients, fl, llms",Deep models under the GAN: information leakage from collaborative deep learning
+ref-031e3263,103,C6,"anonymity, record linkage, nist","(k, ε)-anonymity: k-anonymity with ε-differential privacy"
+ref-696b4f16,104,C5,"synthetic data, ieee, epfl",TAPAS: a toolbox for adversarial privacy auditing of synthetic data
+ref-425917bb,105,C4,"encryption, fhe, cloud",Intesa Sanpaolo and IBM secure digital transactions with fully homomorphic encryption
+ref-692f3ba2,106,C2,"zk, zero knowledge, protocols",
+ref-c7118a81,107,C4,"encryption, fhe, cloud",The ultimate tool for data privacy: fully homomorphic encryption
+ref-3647437f,108,C4,"encryption, fhe, cloud",
+ref-fce3b285,109,C4,"encryption, fhe, cloud",
+ref-f7941967,110,C7,"cookies, ons, safes",
+ref-8d2c6f11,111,C3,"pets, privacy enhancing technologies, dp",
+ref-3aaab597,112,C3,"pets, privacy enhancing technologies, dp",
+ref-c3db5992,113,C7,"cookies, ons, safes",
+ref-b284cedb,114,C2,"zk, zero knowledge, protocols",ZK benchmark toolkit
+ref-93bcc0d9,115,C5,"synthetic data, ieee, epfl",
+ref-566b29bf,116,C5,"synthetic data, ieee, epfl",
+ref-6be3fe98,117,C4,"encryption, fhe, cloud",
+ref-a010aef5,118,C4,"encryption, fhe, cloud",
+ref-996e73ea,119,C2,"zk, zero knowledge, protocols",On the round complexity of black-box secure MPC
+ref-f8b86959,120,C3,"pets, privacy enhancing technologies, dp",
+ref-83ba8709,121,C3,"pets, privacy enhancing technologies, dp",
+ref-1bf848ab,122,C3,"pets, privacy enhancing technologies, dp",Evaluating differentially private machine learning in practice
+ref-26f57ee3,123,C1,"clients, fl, llms",MIMIC-IV: a freely accessible electronic health record dataset
+ref-e7ee91cd,124,C5,"synthetic data, ieee, epfl","Synthetic data - what, why and how?"
+ref-f7e4c148,125,C5,"synthetic data, ieee, epfl",Synthetic data generation with differential privacy: a survey
+ref-082da7cc,126,C5,"synthetic data, ieee, epfl",A scoping review of privacy and utility metrics in medical synthetic data
+ref-6d7b3e19,127,C1,"clients, fl, llms",Advances and open problems in federated learning
+ref-98ce037d,128,C1,"clients, fl, llms","Secure, privacy-preserving and federated machine learning in medical imaging"
+ref-9fe72039,129,C2,"zk, zero knowledge, protocols",Scaling up trustless DNN inference with zero-knowledge proofs
+ref-fddd7b4f,130,C7,"cookies, ons, safes",The use of differential privacy for census data and its impact on redistricting: the case of the 2020 U.S. Census
+ref-c55155a2,131,C4,"encryption, fhe, cloud",Secure logistic regression based on homomorphic encryption: design and evaluation
+ref-dc8cc1e7,132,C1,"clients, fl, llms",Auto-encoding variational Bayes
+ref-facc7cac,133,C2,"zk, zero knowledge, protocols",CrypTen: secure multi-party computation meets machine learning
+ref-acec5dee,134,C2,"zk, zero knowledge, protocols",b4M: holistic benchmarking for MPC
+ref-940a42a8,135,C4,"encryption, fhe, cloud","Timing attacks on implementations of Diffie-Hellman, RSA, DSS, and other systems"
+ref-c2a51bb0,136,C1,"clients, fl, llms",Federated learning: strategies for improving communication efficiency
+ref-83e3ba29,137,C4,"encryption, fhe, cloud",A CCA-PKE secure-cryptosystem resilient to randomness reset and secret-key leakage
+ref-db4ea833,138,C3,"pets, privacy enhancing technologies, dp",Differentially private filtering
+ref-25930b66,139,C1,"clients, fl, llms",Robust aggregation for federated learning by minimum γ-divergence estimation
+ref-ac3cc3c2,140,C6,"anonymity, record linkage, nist",t-closeness: privacy beyond k-anonymity and l-diversity
+ref-c353906d,141,C1,"clients, fl, llms","Federated learning: challenges, methods, and future directions"
+ref-64ee74d7,142,C2,"zk, zero knowledge, protocols",SoK: understanding zk-SNARKs: the gap between research and practice
+ref-bd0ac3d7,143,C1,"clients, fl, llms",Rethinking machine unlearning for large language models
+ref-dce4e078,144,C1,"clients, fl, llms",Differentially private low-rank adaptation of large language model using federated learning
+ref-a240dc84,145,C4,"encryption, fhe, cloud",Benchmarking analytical query processing in Intel SGXv2
+ref-d11febc7,146,C1,"clients, fl, llms",RoFL: robustness of secure federated learning
+ref-e0c69ac8,147,C6,"anonymity, record linkage, nist",l-diversity: privacy beyond k-anonymity
+ref-35934434,148,C3,"pets, privacy enhancing technologies, dp",
+ref-1a35257e,149,C6,"anonymity, record linkage, nist",Evaluating the disclosure risk of anonymized documents via a machine learning-based re-identification attack
+ref-36397f5a,150,C4,"encryption, fhe, cloud",Argmax and XGBoost training over fully homomorphic encryption
+ref-502101a0,151,C3,"pets, privacy enhancing technologies, dp",
+ref-a8701836,152,C5,"synthetic data, ieee, epfl",Winning the NIST contest: a scalable and general approach to differentially private synthetic data
+ref-e908505e,153,C3,"pets, privacy enhancing technologies, dp",Graphical-model based estimation and inference for differential privacy
+ref-90386834,154,C1,"clients, fl, llms",Communication-efficient learning of deep networks from decentralized data
+ref-f732c5bc,155,C2,"zk, zero knowledge, protocols",Secure multi-party computation
+ref-64c16f7e,156,C3,"pets, privacy enhancing technologies, dp",
+ref-8589e07f,157,other,,"Owning ethics: corporate logics, Silicon Valley, and the institutionalization of ethics"
+ref-6d274370,158,C4,"encryption, fhe, cloud",
+ref-7cf69319,159,C4,"encryption, fhe, cloud",
+ref-8338ba88,160,C3,"pets, privacy enhancing technologies, dp",Rényi differential privacy
+ref-041f7f27,161,C5,"synthetic data, ieee, epfl",
+ref-a95c23fb,162,C1,"clients, fl, llms",Model cards for model reporting
+ref-b1a89675,163,C1,"clients, fl, llms","Differential privacy for medical deep learning: methods, trade-offs, and deployment implications"
+ref-b66dee06,164,C4,"encryption, fhe, cloud",Securing AI inference in the cloud: is CPU-GPU confidential computing ready?
+ref-e668e417,165,C2,"zk, zero knowledge, protocols",ABY3: a mixed protocol framework for machine learning
+ref-79e0261b,166,C2,"zk, zero knowledge, protocols",SecureML: a system for scalable privacy-preserving machine learning
+ref-c5b322a2,167,C5,"synthetic data, ieee, epfl",Intel
+ref-7f1302e2,168,C7,"cookies, ons, safes",Protecting health data at UK Biobank
+ref-58dca6d8,169,C7,"cookies, ons, safes",Protecting vulnerable respondents: a critical analysis of the privacy-preserving methods of the 2010 and 2020 decennial census
+ref-0e8f1a0c,170,C3,"pets, privacy enhancing technologies, dp",Practitioners
+ref-80ddbc30,171,C6,"anonymity, record linkage, nist",Verifiable differential privacy
+ref-6656e309,172,C6,"anonymity, record linkage, nist",Robust de-anonymization of large sparse datasets
+ref-8b0108bd,173,C1,"clients, fl, llms",Comprehensive privacy analysis of deep learning: passive and active white-box inference attacks against centralized and federated learning
+ref-46a18802,174,C6,"anonymity, record linkage, nist",
+ref-88ee23da,175,C6,"anonymity, record linkage, nist",
+ref-8e343f28,176,C6,"anonymity, record linkage, nist",
+ref-0e6df851,177,C4,"encryption, fhe, cloud",
+ref-652a4552,178,C3,"pets, privacy enhancing technologies, dp",
+ref-d4ac4970,179,C2,"zk, zero knowledge, protocols",
+ref-b75d00fe,180,other,,
+ref-f7c5282f,181,other,,
+ref-3387b86a,182,C2,"zk, zero knowledge, protocols",
+ref-d3a3d0a2,183,C7,"cookies, ons, safes",
+ref-e13bf926,184,C7,"cookies, ons, safes",Health Data Research Service: unlocking the potential of health and care data to transform lives
+ref-46aed7c4,185,C4,"encryption, fhe, cloud",A survey of published attacks on Intel SGX
+ref-36edf7d4,186,C1,"clients, fl, llms",
+ref-8da87d0a,187,C1,"clients, fl, llms",
+ref-dc0243d8,188,C3,"pets, privacy enhancing technologies, dp",
+ref-b7a6fc9a,189,C3,"pets, privacy enhancing technologies, dp",
+ref-def39d60,190,C7,"cookies, ons, safes",
+ref-203b892f,191,C7,"cookies, ons, safes",
+ref-3fe3f25a,192,C7,"cookies, ons, safes",
+ref-c1291703,193,C7,"cookies, ons, safes",
+ref-853f811e,194,C7,"cookies, ons, safes",
+ref-789b4b7f,195,C6,"anonymity, record linkage, nist",Broken promises of privacy: responding to the surprising failure of anonymization
+ref-2887d8ed,196,C2,"zk, zero knowledge, protocols",
+ref-3cae6369,197,C5,"synthetic data, ieee, epfl",
+ref-4ac68b5a,198,C3,"pets, privacy enhancing technologies, dp",
+ref-aed9e360,199,C2,"zk, zero knowledge, protocols",
+ref-74ac3db7,200,C7,"cookies, ons, safes",
+ref-3d1bdb48,201,C4,"encryption, fhe, cloud",Optalysys partners with Google HEIR to trial photonic computing technology for fully homomorphic encryption (FHE)
+ref-cc5ed4e5,202,C2,"zk, zero knowledge, protocols","Systematic review: comparing zkSNARK, zkSTARK, and Bulletproof protocols for privacy-preserving authentication"
+ref-fdc63d96,203,C4,"encryption, fhe, cloud","Performance analysis of leading homomorphic encryption libraries: a benchmark study of SEAL, HElib, OpenFHE, and Lattigo"
+ref-aa341217,204,C5,"synthetic data, ieee, epfl",The synthetic data vault: generative modeling for relational databases
+ref-a04ec511,205,C2,"zk, zero knowledge, protocols",A survey of zero-knowledge proof based verifiable machine learning
+ref-2468004f,206,C1,"clients, fl, llms",Google DeepMind and healthcare in an age of algorithms
+ref-9edcf2e5,207,C3,"pets, privacy enhancing technologies, dp",Are we living in surveillance societies and is privacy an illusion? An empirical study on privacy literacy and privacy concerns
+ref-7b5f603c,208,C5,"synthetic data, ieee, epfl",Synthetic data for privacy-preserving clinical risk prediction
+ref-f6d22165,209,C1,"clients, fl, llms",A survey on unlearning in large language models
+ref-1d07944c,210,C1,"clients, fl, llms",Enhancing robustness in federated learning by supervised anomaly detection
+ref-7e4602dc,211,C5,"synthetic data, ieee, epfl",SYNDAT: a framework for systematic evaluation of synthetic tabular data
+ref-2a2b1517,212,C1,"clients, fl, llms",Reducing bias and increasing utility by federated generative modeling of medical images using a centralized adversary
+ref-bceaf7e7,213,C2,"zk, zero knowledge, protocols",Regulatory options for integrating zero-knowledge proofs into the European digital identity wallet
+ref-ed6a0acd,214,C2,"zk, zero knowledge, protocols",Wave hello to privacy: efficient mixed-mode MPC using wavelet transforms
+ref-d1679c21,215,C5,"synthetic data, ieee, epfl",Using multiple imputation to integrate and disseminate confidential microdata
+ref-f2f889a0,216,C2,"zk, zero knowledge, protocols",Chameleon: a hybrid secure computation framework for machine learning applications
+ref-38cf4a31,217,C1,"clients, fl, llms",The future of digital health with federated learning
+ref-8be6470e,218,C6,"anonymity, record linkage, nist",Estimating the success of re-identifications in incomplete datasets using generative models
+ref-70cd3e8e,219,C1,"clients, fl, llms",The SYNTHIA dataset: a large collection of synthetic images for semantic segmentation of urban scenes
+ref-20136b77,220,C1,"clients, fl, llms",Overview of real-world applications of federated learning with NVIDIA FLARE
+ref-a8f554bc,221,C3,"pets, privacy enhancing technologies, dp",
+ref-1770fbae,222,C3,"pets, privacy enhancing technologies, dp",
+ref-f39db4f9,223,C7,"cookies, ons, safes",Discussion: statistical disclosure limitation
+ref-81b9513c,224,C7,"cookies, ons, safes",Differential privacy and census data: implications for social and economic research
+ref-78046d90,225,C1,"clients, fl, llms",A generic framework for privacy preserving deep learning
+ref-6817a378,226,C6,"anonymity, record linkage, nist",Sharing graphs using differentially private graph models
+ref-d7b5bfc3,227,C6,"anonymity, record linkage, nist",Privacy-preserving record linkage using Bloom filters
+ref-dbfa0943,228,C2,"zk, zero knowledge, protocols",Secure computation: from theory to practice
+ref-8f1abe85,229,C4,"encryption, fhe, cloud",VC3: trustworthy data analytics in the cloud using SGX
+ref-a63f4364,230,C5,"synthetic data, ieee, epfl",
+ref-76da8e64,231,C4,"encryption, fhe, cloud",How (not) to simulate PLONK
+ref-0938127e,232,C1,"clients, fl, llms",Understanding federated learning from IID to non-IID dataset: an experimental study
+ref-9254e1ed,233,C1,"clients, fl, llms",Federated learning in medicine: facilitating multi-institutional collaborations without sharing patient data
+ref-13881075,234,C2,"zk, zero knowledge, protocols",
+ref-f8211ef7,235,C6,"anonymity, record linkage, nist",Assessing and minimizing re-identification risk in research data derived from health care records
+ref-499e5c81,236,C1,"clients, fl, llms",VaultGemma: the world
+ref-0904d5a3,237,C5,"synthetic data, ieee, epfl",General and specific utility measures for synthetic data
+ref-4b71df4c,238,C1,"clients, fl, llms",A scalable federated learning solution for secondary care using low-cost microcomputing: privacy-preserving development and evaluation of a COVID-19 screening test in UK hospitals
+ref-3680077f,239,C3,"pets, privacy enhancing technologies, dp",Engineering privacy
+ref-f3f8305e,240,C5,"synthetic data, ieee, epfl",Synthetic data - anonymisation Groundhog Day
+ref-6d7d895a,241,C5,"synthetic data, ieee, epfl",
+ref-812a8713,242,C2,"zk, zero knowledge, protocols",Ethical and social reflections on the proposed European Health Data Space
+ref-2de64f57,243,C5,"synthetic data, ieee, epfl",Synthetic data privacy metrics
+ref-455895c4,244,C6,"anonymity, record linkage, nist",
+ref-3b734459,245,C6,"anonymity, record linkage, nist",k-anonymity: a model for protecting privacy
+ref-3f3479a0,246,C2,"zk, zero knowledge, protocols",
+ref-ca61486a,247,C1,"clients, fl, llms",Anonymization of longitudinal electronic medical records
+ref-e8d083f9,248,C3,"pets, privacy enhancing technologies, dp",Privacy loss in Apple
+ref-3898cadf,249,C3,"pets, privacy enhancing technologies, dp",Cookie Monster: efficient on-device budgeting for differentially-private ad-measurement systems
+ref-0b0ed7de,250,C5,"synthetic data, ieee, epfl",DP-CGAN: differentially private synthetic data and label generation
+ref-6bb14e4c,251,C2,"zk, zero knowledge, protocols",
+ref-cfd118a6,252,C4,"encryption, fhe, cloud",Systematizing decentralization and privacy: lessons from 15 years of research and deployments
+ref-b709ae44,253,C1,"clients, fl, llms",A hybrid approach to privacy-preserving federated learning
+ref-25802bbf,254,C7,"cookies, ons, safes",
+ref-d0a8c87b,255,C5,"synthetic data, ieee, epfl",
+ref-0972619f,256,C7,"cookies, ons, safes",
+ref-9e77014b,257,C3,"pets, privacy enhancing technologies, dp",
+ref-5a7a9933,258,C4,"encryption, fhe, cloud",Foreshadow: extracting the keys to the Intel SGX kingdom with transient out-of-order execution
+ref-6339175c,259,C6,"anonymity, record linkage, nist",A taxonomy of privacy-preserving record linkage techniques
+ref-8c22a0e4,260,C2,"zk, zero knowledge, protocols",ZKProphet: understanding performance of zero-knowledge proofs on GPUs
+ref-ab51e64d,261,C2,"zk, zero knowledge, protocols",
+ref-e77defa6,262,C3,"pets, privacy enhancing technologies, dp",Differential privacy preserving data publishing through context-aware data synthesis
+ref-7c10e6c3,263,C4,"encryption, fhe, cloud",Hardware acceleration for third-generation FHE and PSI based on it
+ref-b0cbc422,264,C4,"encryption, fhe, cloud",Privacy-preserving data sharing using homomorphic encryption and trusted execution environments
+ref-0ad88ad5,265,C1,"clients, fl, llms",Federated learning with differential privacy: algorithms and performance analysis
+ref-330132a4,266,C6,"anonymity, record linkage, nist",
+ref-0a503589,267,C6,"anonymity, record linkage, nist",Enabling realistic health data re-identification risk assessment through adversarial modeling
+ref-7037f94b,268,C2,"zk, zero knowledge, protocols",Differentially private generative adversarial network
+ref-73194b54,269,C1,"clients, fl, llms",Federated learning for healthcare informatics
+ref-6bdcf25d,270,C2,"zk, zero knowledge, protocols",Federated learning of Gboard language models with differential privacy
+ref-69281c82,271,C4,"encryption, fhe, cloud",SoK: can fully homomorphic encryption support general AI computation? A functional and cost analysis
+ref-ec679c48,272,C1,"clients, fl, llms",Federated machine learning: concept and applications
+ref-fb63fd8c,273,C2,"zk, zero knowledge, protocols",How to generate and exchange secrets
+ref-36309406,274,C1,"clients, fl, llms",Federated large language models: current progress and future directions
+ref-5a3b1520,275,C5,"synthetic data, ieee, epfl",The DCR delusion: measuring the privacy risk of synthetic data
+ref-a6247c4c,276,C4,"encryption, fhe, cloud","FLUSH+RELOAD: a high resolution, low noise, L3 cache side-channel attack"
+ref-65e85172,277,C2,"zk, zero knowledge, protocols",FedLLM-Bench: realistic benchmarks for federated learning of large language models
+ref-cbbf0f56,278,C1,"clients, fl, llms",Anomaly detection and defence techniques in federated learning: a comprehensive review
+ref-04b589e0,279,C4,"encryption, fhe, cloud",SoK: fully homomorphic encryption accelerators
+ref-5d5eb95f,280,C1,"clients, fl, llms",FLDetector: defending federated learning against model poisoning attacks via detecting malicious clients
+ref-105087e2,281,C1,"clients, fl, llms",Federated learning with non-IID data
+ref-4fa40d48,282,C1,"clients, fl, llms",Deep leakage from gradients
+ref-cdbd7250,283,C2,"zk, zero knowledge, protocols",
+ref-3b3f8112,284,other,,
