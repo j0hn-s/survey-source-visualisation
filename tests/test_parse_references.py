@@ -22,7 +22,8 @@ def test_parses_typical_doi_entry(vocab):
     src = pr.parse_entry(entry, vocab)
     assert src is not None
     assert src.number == 1
-    assert src.id == "ref001"
+    # Content-derived id; we do not pin the exact hash but require the format.
+    assert src.id.startswith("ref-") and len(src.id) == 12
     assert src.year == 2016
     assert src.title == "Deep learning with differential privacy"
     assert src.url == "https://doi.org/10.1145/2976749.2978318"
@@ -96,8 +97,132 @@ def test_full_file_round_trip(project_root, vocab):
     """Sanity check that the live reference list parses cleanly end-to-end."""
     sources = pr.parse_file(project_root / "reference_list.txt", vocab)
     assert len(sources) > 200, "expected the full bibliography (>200 entries)"
-    # Every parsed source must have a stable id of the form refNNN.
-    assert all(s.id.startswith("ref") and len(s.id) == 6 for s in sources)
+    # Every parsed source carries a content-derived id of the form ref-XXXXXXXX.
+    assert all(s.id.startswith("ref-") and len(s.id) == 12 for s in sources)
     # Numbers should be a contiguous 1..N range (Harvard list is numbered).
     numbers = sorted(s.number for s in sources)
     assert numbers == list(range(1, len(sources) + 1))
+
+
+def test_id_is_stable_under_renumbering(vocab):
+    """A reference's id depends only on its content, not its position."""
+    body = (
+        "Author, A. (2024) 'Paper title', Venue. "
+        "<https://doi.org/10.1234/xyz>"
+    )
+    a = pr.parse_entry("1.\t" + body, vocab)
+    b = pr.parse_entry("99.\t" + body, vocab)
+    assert a is not None and b is not None
+    assert a.id == b.id
+    # Position changes, id does not.
+    assert a.number == 1
+    assert b.number == 99
+
+
+def test_id_is_stable_under_whitespace_variation(vocab):
+    """Trailing whitespace and tab vs space must not change the id."""
+    a = pr.parse_entry("1.\tAuthor (2024) 'Title', Venue.", vocab)
+    b = pr.parse_entry("1.   Author  (2024)   'Title',  Venue.   ", vocab)
+    assert a is not None and b is not None
+    assert a.id == b.id
+
+
+def test_id_changes_when_substantive_text_changes(vocab):
+    """A typo fix changes the id - intentional, surfaces an explicit migration."""
+    a = pr.parse_entry("1.\tAuthor (2024) 'Title A', Venue.", vocab)
+    b = pr.parse_entry("1.\tAuthor (2024) 'Title B', Venue.", vocab)
+    assert a is not None and b is not None
+    assert a.id != b.id
+
+
+def test_merge_preserves_curation_for_existing_ids(vocab):
+    parsed = [
+        pr.parse_entry("1.\tAuthor (2024) 'Stable paper', Venue.", vocab),
+    ]
+    assert parsed[0] is not None
+    existing = {
+        parsed[0].id: {
+            "id": parsed[0].id,
+            "publication_type": parsed[0].publication_type_seed,
+            "publication_type_seed": parsed[0].publication_type_seed,
+            "pet_family": "",
+            "pet_family_seed": "",
+            "primary_topic": "mechanism",
+            "secondary_topics": "",
+            "review_note": "reviewed 2026-05",
+        }
+    }
+    rows, report = pr.merge_sources(parsed, existing)
+    assert len(rows) == 1
+    assert rows[0]["primary_topic"] == "mechanism"
+    assert rows[0]["review_note"] == "reviewed 2026-05"
+    assert report.curated_preserved == 1
+    assert report.added_ids == []
+    assert report.removed_ids == []
+
+
+def test_merge_flags_added_and_removed(vocab):
+    parsed = [
+        pr.parse_entry("1.\tAuthor (2024) 'New paper', Venue.", vocab),
+    ]
+    assert parsed[0] is not None
+    # An old entry that no longer appears in reference_list.txt.
+    existing = {
+        "ref-deadbeef": {
+            "id": "ref-deadbeef",
+            "publication_type": "academic_paper",
+            "publication_type_seed": "academic_paper",
+            "pet_family": "",
+            "pet_family_seed": "",
+            "primary_topic": "mechanism",
+            "secondary_topics": "",
+            "review_note": "previously curated",
+        }
+    }
+    _, report = pr.merge_sources(parsed, existing)
+    assert parsed[0].id in report.added_ids
+    assert "ref-deadbeef" in report.removed_ids
+    assert report.curated_dropped == 1  # the removed entry had curation
+
+
+def test_merge_dedupes_identical_entries(vocab):
+    body = "Author (2024) 'Duplicate paper', Venue."
+    parsed = [
+        pr.parse_entry(f"{i}.\t" + body, vocab) for i in (1, 2, 3)
+    ]
+    assert all(p is not None for p in parsed)
+    rows, report = pr.merge_sources(parsed, existing={})
+    assert len(rows) == 1
+    assert len(report.duplicates) == 1
+    sid, numbers = report.duplicates[0]
+    assert numbers == [1, 2, 3]
+    assert sid == parsed[0].id
+
+
+def test_has_curation_ignores_seed_carryover():
+    """A row whose publication_type equals its seed has not been curated."""
+    row = {
+        "publication_type": "academic_paper",
+        "publication_type_seed": "academic_paper",
+        "pet_family": "",
+        "pet_family_seed": "",
+        "primary_topic": "",
+        "secondary_topics": "",
+        "review_note": "",
+    }
+    assert pr._has_curation(row) is False
+    row["primary_topic"] = "mechanism"
+    assert pr._has_curation(row) is True
+
+
+def test_has_curation_detects_override_of_seed():
+    row = {
+        "publication_type": "survey_review",          # overridden
+        "publication_type_seed": "academic_paper",     # seed
+        "pet_family": "",
+        "pet_family_seed": "",
+        "primary_topic": "",
+        "secondary_topics": "",
+        "review_note": "",
+    }
+    assert pr._has_curation(row) is True
