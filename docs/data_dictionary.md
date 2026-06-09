@@ -10,8 +10,8 @@ Fields are grouped by provenance.
 
 | Column | Type | Meaning |
 | --- | --- | --- |
-| `id` | string | Stable identifier, `refNNN` where `NNN` is zero-padded. |
-| `number` | int | Position in the bibliography as given by the author. |
+| `id` | string | Stable, content-derived identifier of the form `ref-XXXXXXXX` (8 hex chars of SHA-1 over the normalised raw entry). Does not change when the bibliography is renumbered or when entries are inserted; does change if the entry's substantive text is edited. |
+| `number` | int | Position in the bibliography as given by the author. Mutable across re-parses; use `id` for lookups. |
 | `raw` | string | The verbatim bibliography entry. Kept so a reviewer can always trace a row back to its source. |
 | `authors` | string | Text before the first `(YYYY)` token. |
 | `year` | int or blank | First four-digit year inside parentheses. Blank when none is detected; flagged for manual review. |
@@ -67,3 +67,20 @@ synthetic_data, syntactic_anonymisation
 ```
 abstract, summary, full, manual
 ```
+
+## `data/source_text.csv` (Stage 2 output)
+
+One row per source, recording the acquired text used for clustering and full
+provenance. Regenerate with `python -m src.acquire_text`.
+
+| Column | Meaning |
+| --- | --- |
+| `id` | Source id (joins to `sources.csv`). |
+| `number` | Bibliography number, for convenience. |
+| `text_strategy` | Acquisition strategy applied (`abstract` / `summary` / `full` / `manual`), derived from publication type. |
+| `source` | Where the text came from: `arxiv`, `crossref`, `semantic_scholar`, `semantic_scholar_title`, `openalex`, `pdf`, `web_page`, `override`, `pdf_no_parser`, or `title_fallback`. |
+| `status` | `ok` (text acquired) or `fallback` (no abstract/description obtainable; the build uses the title). |
+| `http_status` | HTTP status of the last fetch attempt (blank for overrides). |
+| `n_chars` | Length of the acquired text. |
+| `title_seen` | The record/page title returned by the source. Used to check the abstract belongs to the right work; a mismatch with `sources.csv:title` flags a likely wrong DOI. |
+| `text` | The acquired abstract / description (capped). Empty for fallbacks. |
