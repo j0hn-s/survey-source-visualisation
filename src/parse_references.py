@@ -4,7 +4,7 @@ The input is a numbered, hand-curated list of references (one per line) using
 Cite Them Right Harvard. We extract only fields that can be read off the
 reference itself without ambiguity:
 
-    * id            stable identifier (refNNN)
+    * id            stable, content-derived identifier (ref-XXXXXXXX)
     * number        the position in the bibliography as given by the author
     * raw           the verbatim entry
     * authors       text before the first '(YYYY' token
@@ -19,10 +19,36 @@ The two *_seed columns are deliberately named "seed" because they are starting
 points for human review, not authoritative labels. See
 docs/topic_assignment_guide.md for the curation workflow.
 
+Stable id design
+----------------
+`id` is `ref-<first 8 hex chars of SHA-1 of the normalised raw entry>`. This
+matters when the bibliography is later extended:
+
+  * inserting a reference in the middle of `reference_list.txt` no longer
+    shifts every downstream id;
+  * curated rows in `sources.csv` survive a re-parse because they are looked
+    up by id, not position;
+  * cached text payloads at `data/abstracts_cache/{id}.txt` remain valid.
+
+If you edit an existing entry's text (e.g. fix a typo in the bibliography),
+its hash changes and the parser will treat it as a new entry. The merge
+report flags the old id as removed and the new id as added so you can choose
+to migrate any curated columns explicitly.
+
+Re-running the parser
+---------------------
+By default the parser runs in **merge mode**: it reads any existing
+`data/sources.csv`, indexes it by id, and copies the curated columns
+(`publication_type`, `pet_family`, `primary_topic`, `secondary_topics`,
+`review_note`) onto the freshly parsed rows. New entries appear with empty
+curated columns; entries no longer present in `reference_list.txt` are
+dropped, and a list of dropped ids is printed to stderr.
+
 Run:
 
-    python -m src.parse_references \\
-        --input reference_list.txt --output data/sources.csv
+    python -m src.parse_references                       # merge (default)
+    python -m src.parse_references --rebuild             # discard curation
+    python -m src.parse_references --input X --output Y
 
 Methodological note: we extract from the bibliography rather than re-querying
 external systems at this stage so that the seed CSV is reproducible from a
@@ -34,12 +60,29 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import re
+import sys
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Iterable
 
 import yaml
+
+
+# Columns the parser overwrites on every run (mechanical / seed fields).
+MECHANICAL_COLUMNS: tuple[str, ...] = (
+    "id", "number", "raw", "authors", "year", "title", "venue",
+    "url", "doi", "arxiv_id",
+    "publication_type_seed", "pet_family_seed", "text_strategy",
+)
+
+# Columns the parser preserves across re-parses (human-curation fields). On a
+# merge, these are copied from the existing sources.csv by id.
+CURATED_COLUMNS: tuple[str, ...] = (
+    "publication_type", "pet_family", "primary_topic",
+    "secondary_topics", "review_note",
+)
 
 
 # Single typographic and ASCII quote families used in the source file.
@@ -83,6 +126,22 @@ class Source:
 
 def _strip(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip(" ,.;:")
+
+
+def _content_id(body: str) -> str:
+    """Stable, content-derived id for an entry.
+
+    The hash is taken over the *normalised* raw text (whitespace collapsed,
+    leading "N." numbering stripped) so that:
+      * re-numbering the bibliography does not change the id;
+      * adding or removing whitespace does not change the id;
+      * fixing a substantive typo *does* change the id (the merge report
+        will surface this as one removed and one added id, prompting an
+        explicit migration decision).
+    """
+    normalised = re.sub(r"\s+", " ", body.strip())
+    digest = hashlib.sha1(normalised.encode("utf-8")).hexdigest()
+    return f"ref-{digest[:8]}"
 
 
 def _extract_title(body: str) -> tuple[str, str]:
@@ -183,7 +242,7 @@ def parse_entry(line: str, vocab: dict) -> Source | None:
     text_strategy = _infer_text_strategy(pub_type)
 
     return Source(
-        id=f"ref{number:03d}",
+        id=_content_id(body),
         number=number,
         raw=body,
         authors=authors,
@@ -224,18 +283,201 @@ def write_csv(sources: Iterable[Source], path: Path) -> None:
         writer.writerows(rows)
 
 
+@dataclass
+class MergeReport:
+    """Summary of a re-parse against an existing sources.csv.
+
+    Read this to find out what changed: which entries are new, which were
+    dropped (i.e. removed from the bibliography or had their text edited),
+    and how many curated rows survived the merge.
+    """
+    total_now: int
+    total_before: int
+    added_ids: list[str] = field(default_factory=list)
+    removed_ids: list[str] = field(default_factory=list)
+    curated_preserved: int = 0
+    curated_dropped: int = 0
+    duplicates: list[tuple[str, list[int]]] = field(default_factory=list)
+
+    def render(self) -> str:
+        lines = [
+            f"parsed {self.total_now} entries (previously {self.total_before})",
+            f"  added:   {len(self.added_ids)}",
+            f"  removed: {len(self.removed_ids)}",
+            f"  curated rows preserved: {self.curated_preserved}",
+        ]
+        if self.curated_dropped:
+            lines.append(
+                f"  curated rows DROPPED:  {self.curated_dropped}  "
+                "(entries removed from reference_list.txt or had text edited; "
+                "see removed_ids)"
+            )
+        if self.duplicates:
+            lines.append(
+                f"  duplicate entries collapsed: {len(self.duplicates)}  "
+                "(same content under multiple bibliography numbers)"
+            )
+            for sid, numbers in self.duplicates[:5]:
+                lines.append(f"    {sid}: numbers {numbers}")
+        if self.removed_ids:
+            shown = ", ".join(self.removed_ids[:5])
+            more = "" if len(self.removed_ids) <= 5 else f"  (+{len(self.removed_ids) - 5} more)"
+            lines.append(f"  removed_ids: {shown}{more}")
+        if self.added_ids:
+            shown = ", ".join(self.added_ids[:5])
+            more = "" if len(self.added_ids) <= 5 else f"  (+{len(self.added_ids) - 5} more)"
+            lines.append(f"  added_ids:   {shown}{more}")
+        return "\n".join(lines)
+
+
+def _read_existing(path: Path) -> dict[str, dict[str, str]]:
+    """Index an existing sources.csv by id. Missing file returns an empty dict."""
+    if not path.exists() or path.stat().st_size == 0:
+        return {}
+    with path.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        return {row["id"]: row for row in reader if row.get("id")}
+
+
+def _has_curation(row: dict[str, str]) -> bool:
+    """A row counts as curated only when a reviewer has added value beyond
+    the parser's seed values.
+
+    `publication_type` and `pet_family` are populated by the parser with the
+    seed value on first parse, so a non-empty value alone does not imply a
+    human decision; it must *differ* from the seed. `primary_topic`,
+    `secondary_topics`, and `review_note` are blank by default, so any
+    non-empty value is human-authored.
+    """
+    if row.get("primary_topic", "").strip():
+        return True
+    if row.get("secondary_topics", "").strip():
+        return True
+    if row.get("review_note", "").strip():
+        return True
+    pt = row.get("publication_type", "").strip()
+    pt_seed = row.get("publication_type_seed", "").strip()
+    if pt and pt != pt_seed:
+        return True
+    fam = row.get("pet_family", "").strip()
+    fam_seed = row.get("pet_family_seed", "").strip()
+    if fam and fam != fam_seed:
+        return True
+    return False
+
+
+def merge_sources(
+    parsed: list[Source],
+    existing: dict[str, dict[str, str]],
+) -> tuple[list[dict[str, str]], MergeReport]:
+    """Combine freshly parsed entries with curated columns from a prior run.
+
+    For every unique parsed id we keep the mechanical / seed fields from the
+    parser (they reflect the current text) and overlay any non-empty curated
+    columns from the prior run keyed on `id`. New entries appear with the
+    parser's seed values intact; entries that were curated but are no longer
+    present in `reference_list.txt` are dropped and reported.
+
+    Two entries with identical normalised text collapse to one row. The
+    canonical row keeps the lowest bibliography `number` (the earliest
+    occurrence). All collapsed numbers are reported in the `duplicates`
+    field of the MergeReport so the bibliography author can decide whether
+    to remove the duplicates from `reference_list.txt`.
+    """
+    # Group parsed entries by stable id and capture every position number.
+    grouped: dict[str, list[Source]] = {}
+    for s in parsed:
+        grouped.setdefault(s.id, []).append(s)
+
+    duplicates: list[tuple[str, list[int]]] = []
+    canonical: list[Source] = []
+    for sid, group in grouped.items():
+        group_sorted = sorted(group, key=lambda s: s.number)
+        canonical.append(group_sorted[0])
+        if len(group_sorted) > 1:
+            duplicates.append((sid, [s.number for s in group_sorted]))
+
+    parsed_by_id = {s.id: s for s in canonical}
+    added = [sid for sid in parsed_by_id if sid not in existing]
+    removed = [sid for sid in existing if sid not in parsed_by_id]
+    curated_preserved = 0
+
+    merged_rows: list[dict[str, str]] = []
+    for source in sorted(canonical, key=lambda s: s.number):
+        row = source.as_row()
+        prior = existing.get(source.id)
+        if prior:
+            had_curation = _has_curation(prior)
+            for col in CURATED_COLUMNS:
+                value = prior.get(col, "")
+                if value:
+                    row[col] = value
+            if had_curation:
+                curated_preserved += 1
+        merged_rows.append(row)
+
+    curated_dropped = sum(
+        1 for sid in removed if _has_curation(existing[sid])
+    )
+
+    report = MergeReport(
+        total_now=len(canonical),
+        total_before=len(existing),
+        added_ids=added,
+        removed_ids=removed,
+        curated_preserved=curated_preserved,
+        curated_dropped=curated_dropped,
+        duplicates=duplicates,
+    )
+    return merged_rows, report
+
+
+def _write_rows(rows: list[dict[str, str]], path: Path) -> None:
+    """Write a merge result. The column order is fixed (mechanical then curated)
+    so the CSV diffs cleanly across re-runs."""
+    if not rows:
+        path.write_text("", encoding="utf-8")
+        return
+    fieldnames = list(MECHANICAL_COLUMNS) + list(CURATED_COLUMNS)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({k: row.get(k, "") for k in fieldnames})
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--input", default="reference_list.txt")
     ap.add_argument("--output", default="data/sources.csv")
     ap.add_argument("--vocab", default="data/topic_vocabulary.yaml")
+    ap.add_argument(
+        "--rebuild",
+        action="store_true",
+        help=(
+            "discard any existing sources.csv and start fresh. Curated columns "
+            "are NOT preserved. Use only when migrating id schemes or starting over."
+        ),
+    )
     args = ap.parse_args()
 
     root = Path(__file__).resolve().parent.parent
     vocab = yaml.safe_load((root / args.vocab).read_text(encoding="utf-8"))
-    sources = parse_file(root / args.input, vocab)
-    write_csv(sources, root / args.output)
-    print(f"parsed {len(sources)} entries -> {args.output}")
+    parsed = parse_file(root / args.input, vocab)
+
+    out_path = root / args.output
+    if args.rebuild:
+        existing: dict[str, dict[str, str]] = {}
+    else:
+        existing = _read_existing(out_path)
+
+    rows, report = merge_sources(parsed, existing)
+    _write_rows(rows, out_path)
+    print(report.render())
+    print(f"wrote -> {args.output}")
+    if report.curated_dropped:
+        sys.exit(2)  # non-zero so a script can surface lost curation
 
 
 if __name__ == "__main__":

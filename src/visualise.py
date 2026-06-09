@@ -27,8 +27,12 @@ import pandas as pd
 import seaborn as sns
 
 
-# Colour palettes deliberately use ColorBrewer-style qualitative schemes so
-# that distinctions remain legible for colour-blind readers (Brewer, 1994).
+# Legacy topic palette, used only by the notebook / back-compatible path. The
+# headline figures colour by emergent cluster using the colour-blind-safe Paul
+# Tol "muted" scheme defined in semantic_clusters.py. This topic scheme is a
+# ColorBrewer qualitative set and is NOT guaranteed colour-blind-safe (notably
+# `survey` light-blue and the blank/Unclassified grey are close under
+# deuteranopia); prefer the cluster encoding for published figures.
 TOPIC_PALETTE = {
     "mechanism": "#1f78b4",
     "systems": "#33a02c",
@@ -49,6 +53,7 @@ TYPE_MARKERS = {
     "standards_specification": "X",
     "industry_blog": "v",
     "software_repository": "*",
+    "online_resource": "<",
     "": ".",
 }
 
@@ -62,6 +67,7 @@ PUBLICATION_TYPE_DISPLAY = {
     "standards_specification": "Standard / specification",
     "industry_blog": "Industry blog",
     "software_repository": "Software repository",
+    "online_resource": "Online resource / documentation",
     "": "Unclassified",
 }
 
@@ -93,7 +99,7 @@ SURVEY_PET_FAMILIES: list[tuple[str, str]] = [
 ]
 
 
-def _layout(g: nx.MultiGraph, seed: int = 42) -> dict:
+def _layout(g: nx.MultiGraph, seed: int = 42, weights: Optional[dict] = None) -> dict:
     """Compute positions on a *weighted single-graph* projection of `g`.
 
     Topic edges are dense (every pair within a topic) and would collapse a
@@ -109,7 +115,7 @@ def _layout(g: nx.MultiGraph, seed: int = 42) -> dict:
     """
     simple = nx.Graph()
     simple.add_nodes_from(g.nodes(data=True))
-    weights = {"semantic": 1.0, "family": 0.15, "topic": 0.05}
+    weights = weights or {"semantic": 1.0, "family": 0.15, "topic": 0.05}
     for u, v, data in g.edges(data=True):
         w = weights.get(data.get("etype"), 0.0) * float(data.get("weight", 1.0))
         if simple.has_edge(u, v):
@@ -134,6 +140,14 @@ def render_graph(
     node_size_scale: float = 60.0,
     figsize: tuple[float, float] = (20, 14),
     seed: int = 42,
+    color_attr: str = "primary_topic",
+    palette: Optional[dict] = None,
+    display: Optional[dict] = None,
+    legend_title: str = "Primary topic",
+    layout_weights: Optional[dict] = None,
+    edge_alpha: Optional[float] = None,
+    annotate_clusters: bool = False,
+    semantic_draw_min: Optional[float] = None,
 ):
     """Render the main figure. Returns the matplotlib Figure for further tweaks.
 
@@ -143,7 +157,9 @@ def render_graph(
     site. The legend is placed outside the plot area so it never overlaps the
     network when the layout spreads to the edges.
     """
-    pos = _layout(g, seed=seed)
+    pal = palette or TOPIC_PALETTE
+    disp = display or TOPIC_DISPLAY
+    pos = _layout(g, seed=seed, weights=layout_weights)
     fig, ax = plt.subplots(figsize=figsize)
 
     edge_styles = {
@@ -151,8 +167,16 @@ def render_graph(
         "family": {"alpha": 0.08, "width": 0.5, "edge_color": "#4d4d4d"},
         "semantic": {"alpha": 0.5, "width": 1.0, "edge_color": "#222222"},
     }
+    if edge_alpha is not None:
+        for style in edge_styles.values():
+            style["alpha"] = edge_alpha
     for etype in show_edges:
-        edgelist = [(u, v) for u, v, d in g.edges(data=True) if d.get("etype") == etype]
+        edges = [(u, v, d) for u, v, d in g.edges(data=True) if d.get("etype") == etype]
+        # Declutter: draw only the stronger semantic links. Weaker edges still
+        # inform the layout and the clustering; they are just not all painted.
+        if etype == "semantic" and semantic_draw_min is not None:
+            edges = [(u, v, d) for u, v, d in edges if float(d.get("weight", 1.0)) >= semantic_draw_min]
+        edgelist = [(u, v) for u, v, _ in edges]
         if edgelist:
             nx.draw_networkx_edges(
                 g,
@@ -165,10 +189,10 @@ def render_graph(
     degrees = dict(g.degree())
     grouped: dict[tuple[str, str], list[str]] = {}
     for node, data in g.nodes(data=True):
-        key = (data.get("primary_topic") or "", data.get("publication_type") or "")
+        key = (data.get(color_attr) or "", data.get("publication_type") or "")
         grouped.setdefault(key, []).append(node)
 
-    for (topic, ptype), nodes in grouped.items():
+    for (colour_key, ptype), nodes in grouped.items():
         x = [pos[n][0] for n in nodes]
         y = [pos[n][1] for n in nodes]
         sizes = [node_size_scale + 14 * degrees.get(n, 0) for n in nodes]
@@ -176,14 +200,32 @@ def render_graph(
             x,
             y,
             s=sizes,
-            c=TOPIC_PALETTE.get(topic, "#bdbdbd"),
+            c=pal.get(colour_key, "#bdbdbd"),
             marker=TYPE_MARKERS.get(ptype, "."),
             edgecolors="white",
             linewidths=0.6,
             label=None,
         )
 
-    _draw_legends(ax)
+    # Label each cluster at its centroid so the map is readable without
+    # cross-referencing the legend for every node.
+    if annotate_clusters:
+        by_key: dict[str, list[str]] = {}
+        for node, data in g.nodes(data=True):
+            k = data.get(color_attr) or ""
+            if k and k != "other":
+                by_key.setdefault(k, []).append(node)
+        for k, nodes in by_key.items():
+            cx = float(np.median([pos[n][0] for n in nodes]))
+            cy = float(np.median([pos[n][1] for n in nodes]))
+            ax.text(
+                cx, cy, k, fontsize=13, fontweight="bold", ha="center", va="center",
+                color="#222222", zorder=6,
+                bbox=dict(boxstyle="round,pad=0.25", fc="white",
+                          ec=pal.get(k, "#888888"), alpha=0.85, linewidth=1.5),
+            )
+
+    _draw_legends(ax, palette=pal, display=disp, legend_title=legend_title)
     ax.set_title(title, fontsize=16, pad=14)
     ax.set_axis_off()
     # Crop the visible area to the bulk of nodes (5th-95th percentile in each
@@ -207,11 +249,13 @@ def render_graph(
     return fig
 
 
-def _draw_legends(ax) -> None:
-    topic_handles = [
+def _draw_legends(ax, palette=None, display=None, legend_title="Primary topic") -> None:
+    pal = palette or TOPIC_PALETTE
+    disp = display or TOPIC_DISPLAY
+    colour_handles = [
         plt.Line2D([0], [0], marker="o", color="w", markerfacecolor=c,
-                   markersize=10, label=TOPIC_DISPLAY.get(t, t))
-        for t, c in TOPIC_PALETTE.items() if t
+                   markersize=10, label=disp.get(t, t))
+        for t, c in pal.items() if t
     ]
     type_handles = [
         plt.Line2D([0], [0], marker=m, color="#444", linestyle="",
@@ -219,10 +263,10 @@ def _draw_legends(ax) -> None:
         for t, m in TYPE_MARKERS.items() if t
     ]
     leg1 = ax.legend(
-        handles=topic_handles,
+        handles=colour_handles,
         bbox_to_anchor=(1.02, 1),
         loc="upper left",
-        title="Primary topic",
+        title=legend_title,
         frameon=False,
         fontsize=10,
     )
@@ -265,45 +309,121 @@ def _node_tooltip(data: dict) -> str:
     )
 
 
-def render_supporting(metadata: pd.DataFrame, out_dir: Path) -> None:
+def render_supporting(
+    metadata: pd.DataFrame,
+    out_dir: Path,
+    group_col: str = "primary_topic",
+    palette: Optional[dict] = None,
+    display: Optional[dict] = None,
+    group_title: str = "Primary topic",
+) -> None:
+    """Render the supporting figures.
+
+    `group_col`/`palette`/`display` control the categorical that colours the
+    timeline stacks, the heatmap rows, and the PET-family stacks. They default
+    to the controlled-vocabulary primary topic (back-compatible with the
+    notebook); the headless build passes the emergent semantic cluster.
+    """
     out_dir.mkdir(parents=True, exist_ok=True)
-    _timeline(metadata, out_dir / "timeline.png")
-    _type_topic_heatmap(metadata, out_dir / "type_topic_heatmap.png")
-    _pet_family_breakdown(metadata, out_dir / "pet_family_breakdown.png")
+    _timeline(metadata, out_dir / "timeline.png", group_col=group_col,
+              palette=palette, display=display, group_title=group_title)
+    _type_topic_heatmap(metadata, out_dir / "type_topic_heatmap.png",
+                        group_col=group_col, display=display, group_title=group_title)
+    _pet_family_breakdown(metadata, out_dir / "pet_family_breakdown.png",
+                          group_col=group_col, palette=palette, display=display,
+                          group_title=group_title)
 
 
-def _timeline(metadata: pd.DataFrame, out_path: Path) -> None:
+TIMELINE_RECENT_CUTOFF = 2013  # years strictly below this are bucketed
+
+
+def _timeline(
+    metadata: pd.DataFrame,
+    out_path: Path,
+    cutoff: int = TIMELINE_RECENT_CUTOFF,
+    group_col: str = "primary_topic",
+    palette: Optional[dict] = None,
+    display: Optional[dict] = None,
+    group_title: str = "Primary topic",
+) -> None:
+    """Stacked bar of sources per year, plotted in descending year order.
+
+    Two emphasis choices are baked into the figure:
+
+    1. **Descending order** - most recent year on the left. The bibliography
+       skews heavily recent and reading left-to-right then leads with that
+       recency rather than burying it.
+
+    2. **Bucketed long tail** - years strictly before `cutoff` are merged
+       into a single "{cutoff-1} and earlier" bin. Each individual pre-cutoff
+       year typically contributes 1-2 sources, which is too thin to support
+       a full tick on the axis and produces visually overlapping labels.
+       The bucket preserves the count without the visual noise.
+    """
+    pal = palette or TOPIC_PALETTE
+    disp = display or TOPIC_DISPLAY
     df = metadata.copy()
     df["year"] = pd.to_numeric(df["year"], errors="coerce")
     df = df.dropna(subset=["year"])
     df["year"] = df["year"].astype(int)
-    counts = (
-        df.groupby(["year", "primary_topic"]).size().reset_index(name="n")
+    df[group_col] = df[group_col].fillna("").replace("", "(none)")
+
+    # Apply the bucket. A short label avoids tick-overlap with the
+    # immediately-newer year on the x-axis.
+    bucket_label = f"≤{cutoff - 1}"
+    df["year_bin"] = df["year"].where(df["year"] >= cutoff, bucket_label)
+
+    counts = df.groupby(["year_bin", group_col]).size().reset_index(name="n")
+    pivot = counts.pivot(index="year_bin", columns=group_col, values="n").fillna(0)
+
+    # Ordering: bucket on the right (oldest), then years descending to the left.
+    individual_years = sorted(
+        [idx for idx in pivot.index if idx != bucket_label],
+        key=lambda y: -int(y),
     )
-    fig, ax = plt.subplots(figsize=(10, 5))
-    pivot = counts.pivot(index="year", columns="primary_topic", values="n").fillna(0)
+    ordered_index = individual_years + ([bucket_label] if bucket_label in pivot.index else [])
+    pivot = pivot.reindex(ordered_index)
+
+    fig, ax = plt.subplots(figsize=(15, 6))
     pivot.plot(
         kind="bar",
         stacked=True,
         ax=ax,
-        color=[TOPIC_PALETTE.get(c, "#bdbdbd") for c in pivot.columns],
+        color=[pal.get(c, "#bdbdbd") for c in pivot.columns],
+        width=0.82,
     )
-    ax.set_ylabel("Sources")
-    ax.set_xlabel("Year")
-    ax.set_title("Sources by year and primary topic")
-    ax.legend(title="Primary topic", bbox_to_anchor=(1.02, 1), loc="upper left")
+    ax.set_ylabel("Number of sources")
+    ax.set_xlabel(f"Publication year (most recent on the left; pre-{cutoff} bucketed)")
+    ax.set_title(f"Sources by publication year and {group_title.lower()}")
+    ax.legend(
+        [disp.get(c, c) for c in pivot.columns],
+        title=group_title,
+        bbox_to_anchor=(1.01, 1),
+        loc="upper left",
+        frameon=False,
+        fontsize=9,
+    )
+    # Horizontal, well-spaced year labels - the previous figure squeezed them.
+    plt.setp(ax.get_xticklabels(), rotation=0, fontsize=11)
+    ax.tick_params(axis="x", length=0, pad=4)
+    ax.margins(x=0.01)
     fig.tight_layout()
     fig.savefig(out_path, dpi=200, bbox_inches="tight")
     plt.close(fig)
 
 
-def _type_topic_heatmap(metadata: pd.DataFrame, out_path: Path) -> None:
-    """Source type × primary topic crosstab, with human-readable axes."""
-    ct = pd.crosstab(metadata["publication_type"], metadata["primary_topic"])
-    ct = ct.rename(
-        index=PUBLICATION_TYPE_DISPLAY,
-        columns=TOPIC_DISPLAY,
-    )
+def _type_topic_heatmap(
+    metadata: pd.DataFrame,
+    out_path: Path,
+    group_col: str = "primary_topic",
+    display: Optional[dict] = None,
+    group_title: str = "Primary topic",
+) -> None:
+    """Source type × group crosstab, with human-readable axes."""
+    disp = display or TOPIC_DISPLAY
+    col = metadata[group_col].fillna("").replace("", "(none)")
+    ct = pd.crosstab(metadata["publication_type"], col)
+    ct = ct.rename(index=PUBLICATION_TYPE_DISPLAY, columns=disp)
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.heatmap(
         ct,
@@ -313,8 +433,8 @@ def _type_topic_heatmap(metadata: pd.DataFrame, out_path: Path) -> None:
         ax=ax,
         cbar_kws={"label": "Number of sources"},
     )
-    ax.set_title("Sources by source type and primary topic")
-    ax.set_xlabel("Primary topic")
+    ax.set_title(f"Sources by source type and {group_title.lower()}")
+    ax.set_xlabel(group_title)
     ax.set_ylabel("Source type")
     plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
     plt.setp(ax.get_yticklabels(), rotation=0)
@@ -323,8 +443,15 @@ def _type_topic_heatmap(metadata: pd.DataFrame, out_path: Path) -> None:
     plt.close(fig)
 
 
-def _pet_family_breakdown(metadata: pd.DataFrame, out_path: Path) -> None:
-    """PET-family count, stacked by primary topic.
+def _pet_family_breakdown(
+    metadata: pd.DataFrame,
+    out_path: Path,
+    group_col: str = "primary_topic",
+    palette: Optional[dict] = None,
+    display: Optional[dict] = None,
+    group_title: str = "Primary topic",
+) -> None:
+    """PET-family count, stacked by `group_col`.
 
     Each source can carry multiple PET-family tags. A source that is tagged
     `differential_privacy;federated_learning` contributes one count to both
@@ -336,9 +463,11 @@ def _pet_family_breakdown(metadata: pd.DataFrame, out_path: Path) -> None:
     (see SURVEY_PET_FAMILIES). Sources that carry no tag from the seven are
     summarised as a separate "Other / none" bar so they are still visible.
     """
+    pal = palette or TOPIC_PALETTE
+    disp = display or TOPIC_DISPLAY
     family_lookup = dict(SURVEY_PET_FAMILIES)
     family_order = [code for code, _ in SURVEY_PET_FAMILIES]
-    topic_order = [t for t in TOPIC_PALETTE if t] + [""]
+    group_order = [t for t in pal if t] + [""]
 
     rows: list[dict] = []
     n_outside = 0
@@ -349,7 +478,7 @@ def _pet_family_breakdown(metadata: pd.DataFrame, out_path: Path) -> None:
             if f.strip()
         ]
         kept = [f for f in families if f in family_lookup]
-        topic = row.get("primary_topic") or ""
+        topic = row.get(group_col) or ""
         if kept:
             for f in kept:
                 rows.append({"family": f, "topic": topic})
@@ -378,7 +507,7 @@ def _pet_family_breakdown(metadata: pd.DataFrame, out_path: Path) -> None:
             .reindex(family_order, fill_value=0)
         )
         pivot = pivot.reindex(
-            columns=[t for t in topic_order if t in pivot.columns], fill_value=0
+            columns=[t for t in group_order if t in pivot.columns], fill_value=0
         )
     pivot.index = [family_lookup[c] for c in pivot.index]
 
@@ -391,7 +520,7 @@ def _pet_family_breakdown(metadata: pd.DataFrame, out_path: Path) -> None:
         pivot.loc["Other / none", "Other / none"] = n_outside
 
     colours = [
-        "#bdbdbd" if c == "Other / none" else TOPIC_PALETTE.get(c, "#bdbdbd")
+        "#bdbdbd" if c == "Other / none" else pal.get(c, "#bdbdbd")
         for c in pivot.columns
     ]
     pivot.plot(
@@ -409,14 +538,14 @@ def _pet_family_breakdown(metadata: pd.DataFrame, out_path: Path) -> None:
         "Number of sources (multi-label: a source may contribute to several bars)"
     )
     ax.set_ylabel("PET family")
-    ax.set_title("Sources by PET family, stacked by primary topic")
+    ax.set_title(f"Sources by PET family, stacked by {group_title.lower()}")
     legend_labels = [
-        "Outside seven-family taxonomy" if c == "Other / none" else TOPIC_DISPLAY.get(c, c)
+        "Outside seven-family taxonomy" if c == "Other / none" else disp.get(c, c)
         for c in pivot.columns
     ]
     ax.legend(
         legend_labels,
-        title="Primary topic",
+        title=group_title,
         bbox_to_anchor=(1.02, 1),
         loc="upper left",
         frameon=False,

@@ -47,6 +47,7 @@ def build_graph(
             year=_safe_year(row.get("year")),
             publication_type=row.get("publication_type") or "",
             primary_topic=row.get("primary_topic") or "",
+            cluster=row.get("cluster") or "",
             pet_family=row.get("pet_family") or "",
             title=row.get("title") or "",
             authors=row.get("authors") or "",
@@ -82,6 +83,12 @@ def _short_label(row: pd.Series) -> str:
 
 
 def _add_topic_edges(g: nx.MultiGraph, metadata: pd.DataFrame) -> None:
+    # Topic edges are optional: when the metadata carries no `primary_topic`
+    # column (e.g. the science-mapping build, which colours by emergent
+    # cluster and lets the layout be driven by semantic + family edges only),
+    # there are simply no topic edges to add.
+    if "primary_topic" not in metadata.columns:
+        return
     for topic, group in metadata.groupby("primary_topic"):
         if not topic:
             continue
